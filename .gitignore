@@ -1,5 +1,5 @@
 /.idea/*
-~/.idea/compiler.xml
-~/.idea/vcs.xml
-*.iml
+!/.idea/compiler.xml
+!/.idea/vcs.xml
 /target/*
+*.iml
