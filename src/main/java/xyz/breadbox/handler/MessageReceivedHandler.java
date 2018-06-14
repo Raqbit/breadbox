@@ -1,34 +1,45 @@
 package xyz.breadbox.handler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.events.IListener;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.util.RequestBuffer;
+import xyz.breadbox.BreadboxApplication;
 import xyz.breadbox.BreadboxCommand;
-import xyz.breadbox.command.GitCommand;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 public class MessageReceivedHandler implements IListener<MessageReceivedEvent> {
 
-    private Map<String, Class<? extends BreadboxCommand>> commands = new HashMap<>();
+    private static Logger logger = LoggerFactory.getLogger(MessageReceivedHandler.class);
 
     @Override
     public void handle(MessageReceivedEvent event) {
         if (!"breadbot-test-spam".equals(event.getChannel().getName())) {
             return;
         }
-
+        String content = event.getMessage().getContent();
+        String[] args = content.split(" ");
+        boolean isCommand = args.length > 0 && ".b".equals(args[0]);
+        if (isCommand) {
+            handleCommand(event, args);
+            return;
+        }
         String displayName = event.getAuthor().getName();
-        System.out.println(String.format("User: %s, message: %s: %s", displayName, event.getMessageID(), event.getMessage()));
-        RequestBuffer.request(() -> {
-            event.getMessage().delete();
-            event.getChannel().sendMessage("I got your message " + displayName + " !");
-        });
-        registerCommand("git", GitCommand.class);
+        logger.debug("User: {}, message: {}: {}", displayName, event.getMessageID(), event.getMessage());
     }
 
-    private void registerCommand(String command, Class<? extends BreadboxCommand> clazz) {
-        commands.put(command, clazz);
+    private void handleCommand(MessageReceivedEvent event, String[] args) {
+        logger.debug(Arrays.toString(args));
+        if (args.length < 2) {
+            return;
+        }
+        String commandString = args[1];
+        BreadboxCommand command = BreadboxApplication.getCommand(commandString);
+        if (command == null) {
+            event.getChannel().sendMessage(String.format("Command `%s` does not exist.", commandString));
+            return;
+        }
+        command.handle(event.getMessage());
     }
 }
