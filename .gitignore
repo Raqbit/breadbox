@@ -2,3 +2,4 @@
 ~/.idea/compiler.xml
 ~/.idea/vcs.xml
 *.iml
+/target/*
