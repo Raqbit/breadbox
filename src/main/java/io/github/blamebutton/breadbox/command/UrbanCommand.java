@@ -2,7 +2,7 @@ package io.github.blamebutton.breadbox.command;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.sun.deploy.util.URLUtil;
+import io.github.blamebutton.breadbox.util.UrlUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ public class UrbanCommand implements BreadboxCommand {
 
     private static final Logger logger = LoggerFactory.getLogger(UrbanCommand.class);
     private static final String URBAN_SEARCH_URL = "https://api.urbandictionary.com/v0/define?term=%s";
-    private String thumbnail = "https://cdn.discordapp.com/attachments/456867763516866570/456899795207061530/" +
+    private final String thumbnail = "https://cdn.discordapp.com/attachments/456867763516866570/456899795207061530/" +
             "logo-1b439b7fa6572b659fbef161d8946372f472ef8e7169db1e47d21c91b410b918.png";
 
     @Override
@@ -31,7 +31,7 @@ public class UrbanCommand implements BreadboxCommand {
         }
         try {
             String term = String.join(" ", args);
-            String url = String.format(URBAN_SEARCH_URL, URLUtil.encodePath(term));
+            String url = String.format(URBAN_SEARCH_URL, UrlUtil.encode(term));
             JSONArray list = Unirest.get(url)
                     .asJson()
                     .getBody()
