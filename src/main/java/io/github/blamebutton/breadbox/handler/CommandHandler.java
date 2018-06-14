@@ -1,11 +1,13 @@
-package xyz.breadbox.handler;
+package io.github.blamebutton.breadbox.handler;
 
+import io.github.blamebutton.breadbox.BreadboxApplication;
+import io.github.blamebutton.breadbox.command.BreadboxCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sx.blah.discord.api.events.IListener;
+import sx.blah.discord.api.events.EventSubscriber;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import xyz.breadbox.BreadboxApplication;
-import xyz.breadbox.BreadboxCommand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,19 +16,30 @@ import java.util.List;
 /**
  * Handles everything related to messages being received.
  */
-public class MessageReceivedHandler implements IListener<MessageReceivedEvent> {
+public class CommandHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
 
     private static final String commandPrefix = ".b";
-    private static Logger logger = LoggerFactory.getLogger(MessageReceivedHandler.class);
+    private static final String testChannel = "breadbot-test-spam";
 
     /**
      * Handle the receiving of a message.
      *
      * @param event the message received event
      */
-    @Override
+    @EventSubscriber
     public void handle(MessageReceivedEvent event) {
-        if (!"breadbot-test-spam".equals(event.getChannel().getName())) {
+        messageReceived(event);
+    }
+
+    @EventSubscriber
+    public void handle(MessageEditEvent event) {
+        messageReceived(event);
+    }
+
+    private void messageReceived(MessageEvent event) {
+        if (!event.getChannel().isPrivate() && !testChannel.equals(event.getChannel().getName())) {
             return;
         }
         String content = event.getMessage().getContent();
@@ -42,11 +55,10 @@ public class MessageReceivedHandler implements IListener<MessageReceivedEvent> {
 
     /**
      * Handle the execution of a command.
-     *
-     * @param event the original message received event
+     *  @param event the original message received event
      * @param args  the arguments for the command
      */
-    private void handleCommand(MessageReceivedEvent event, String[] args) {
+    private void handleCommand(MessageEvent event, String[] args) {
         List<String> arguments = new ArrayList<>(Arrays.asList(args));
         logger.debug(Arrays.toString(arguments.toArray()));
         if (arguments.size() < 2) {
@@ -58,7 +70,8 @@ public class MessageReceivedHandler implements IListener<MessageReceivedEvent> {
             event.getChannel().sendMessage(String.format("Command `%s` does not exist.", commandString));
             return;
         }
-        arguments.removeAll(Arrays.asList(commandPrefix, commandString));
+        arguments.remove(0);
+        arguments.remove(0);
         command.handle(event.getMessage(), arguments);
     }
 }

@@ -1,13 +1,16 @@
-package xyz.breadbox.handler;
+package io.github.blamebutton.breadbox.handler;
 
+import io.github.blamebutton.breadbox.BreadboxApplication;
+import io.github.blamebutton.breadbox.command.HelpCommand;
+import io.github.blamebutton.breadbox.command.UrbanCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.IListener;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
+import sx.blah.discord.handle.obj.ActivityType;
+import sx.blah.discord.handle.obj.StatusType;
 import sx.blah.discord.util.RequestBuffer;
-import xyz.breadbox.BreadboxApplication;
-import xyz.breadbox.command.GitCommand;
 
 public class ReadyEventHandler implements IListener<ReadyEvent> {
 
@@ -25,6 +28,8 @@ public class ReadyEventHandler implements IListener<ReadyEvent> {
         } else {
             logger.debug("Name already matches.");
         }
+        RequestBuffer.request(() ->
+                client.changePresence(StatusType.ONLINE, ActivityType.WATCHING, "your nudes."));
         registerCommands();
     }
 
@@ -33,6 +38,7 @@ public class ReadyEventHandler implements IListener<ReadyEvent> {
      */
     private void registerCommands() {
         BreadboxApplication instance = BreadboxApplication.instance;
-        instance.registerCommand("git", new GitCommand());
+        instance.registerCommand("help", new HelpCommand());
+        instance.registerCommand("urban", new UrbanCommand());
     }
 }

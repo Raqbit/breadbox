@@ -1,4 +1,4 @@
-package xyz.breadbox;
+package io.github.blamebutton.breadbox;
 
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
