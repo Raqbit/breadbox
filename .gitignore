@@ -1,5 +1,6 @@
-/.idea/*
-!/.idea/compiler.xml
-!/.idea/vcs.xml
+.idea/*
+!.idea/runConfigurations/*
+!.idea/compiler.xml
+!.idea/vcs.xml
 /target/*
 *.iml
