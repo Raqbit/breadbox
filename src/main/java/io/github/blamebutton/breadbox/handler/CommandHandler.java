@@ -8,10 +8,12 @@ import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.util.RequestBuffer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Handles everything related to messages being received.
@@ -29,11 +31,13 @@ public class CommandHandler {
      * @param event the message received event
      */
     @EventSubscriber
+    @SuppressWarnings("unused")
     public void handle(MessageReceivedEvent event) {
         messageReceived(event);
     }
 
     @EventSubscriber
+    @SuppressWarnings("unused")
     public void handle(MessageEditEvent event) {
         messageReceived(event);
     }
@@ -44,7 +48,7 @@ public class CommandHandler {
         }
         String content = event.getMessage().getContent();
         String[] args = content.split(" ");
-        boolean isCommand = args.length > 0 && commandPrefix.equals(args[0]);
+        boolean isCommand = commandPrefix.equals(args[0]);
         if (isCommand) {
             handleCommand(event, args);
             return;
@@ -55,23 +59,37 @@ public class CommandHandler {
 
     /**
      * Handle the execution of a command.
-     *  @param event the original message received event
+     *
+     * @param event the original message received event
      * @param args  the arguments for the command
      */
     private void handleCommand(MessageEvent event, String[] args) {
         List<String> arguments = new ArrayList<>(Arrays.asList(args));
-        logger.debug(Arrays.toString(arguments.toArray()));
         if (arguments.size() < 2) {
             return;
         }
-        String commandString = arguments.get(1);
-        BreadboxCommand command = BreadboxApplication.getCommand(commandString);
-        if (command == null) {
-            event.getChannel().sendMessage(String.format("Command `%s` does not exist.", commandString));
+        String command = arguments.get(1);
+        IntStream.of(0, 0).forEach(arguments::remove);
+        callCommand(event, command, arguments);
+    }
+
+    /**
+     * Call a specific command.
+     *
+     * @param event     the message event
+     * @param command   the command to execute
+     * @param arguments the arguments for the command
+     */
+    private void callCommand(MessageEvent event, String command, List<String> arguments) {
+        BreadboxCommand cmd = BreadboxApplication.getCommand(command);
+        if (cmd == null) {
+            RequestBuffer.request(() -> {
+                String message = String.format("Command `%s` does not exist.", command);
+                event.getChannel().sendMessage(message);
+            });
             return;
         }
-        arguments.remove(0);
-        arguments.remove(0);
-        command.handle(event.getMessage(), arguments);
+        logger.debug("Command '{}' arguments: {}", command, Arrays.toString(arguments.toArray()));
+        cmd.handle(event.getMessage(), arguments);
     }
 }

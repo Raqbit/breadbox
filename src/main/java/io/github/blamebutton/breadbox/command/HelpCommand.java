@@ -29,7 +29,9 @@ public class HelpCommand implements BreadboxCommand {
                 pm.sendMessage(builder.build());
             } else {
                 message.getChannel().sendMessage(builder.build());
-                message.delete();
+                if (!message.getChannel().isPrivate()) {
+                    message.delete();
+                }
             }
         });
         logger.debug(Arrays.toString(args.toArray()));
