@@ -17,7 +17,6 @@ public class BreadboxApplication {
     private final String token;
     private final Map<String, BreadboxCommand> commands = new HashMap<>();
     private Environment environment;
-
     private IDiscordClient client;
 
     private BreadboxApplication() {
