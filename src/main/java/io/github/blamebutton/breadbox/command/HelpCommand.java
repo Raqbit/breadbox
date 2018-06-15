@@ -43,12 +43,12 @@ public class HelpCommand implements BreadboxCommand {
             String command = args.get(0);
             builder = new EmbedBuilder()
                     .withTitle(String.format("Help: `%s`", command));
-            builder.appendField(command, BreadboxApplication.getCommand(command).getDescription(), true);
+            builder.appendField(command, BreadboxApplication.instance.getCommand(command).getDescription(), true);
         } else {
             builder = new EmbedBuilder()
                     .withTitle("Help Dialog")
                     .withDescription("All commands and their descriptions are listed here.");
-            BreadboxApplication.getCommands().forEach((command, instance) -> {
+            BreadboxApplication.instance.getCommands().forEach((command, instance) -> {
                 String usage = String.format("%s %s", command, instance.getUsage());
                 builder.appendField(String.format("%s: %s", command, usage), instance.getDescription(), false);
             });

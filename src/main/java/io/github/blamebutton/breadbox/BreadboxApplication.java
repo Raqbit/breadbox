@@ -18,6 +18,8 @@ public class BreadboxApplication {
     private final Map<String, BreadboxCommand> commands = new HashMap<>();
     private Environment environment;
 
+    private IDiscordClient client;
+
     private BreadboxApplication() {
         this(System.getenv("BREADBOX_TOKEN"));
     }
@@ -30,16 +32,6 @@ public class BreadboxApplication {
     BreadboxApplication(String token) {
         this.token = token;
         setup(token);
-    }
-
-    /**
-     * Get a command from the {@link BreadboxApplication#commands} hashmap.
-     *
-     * @param command the command name
-     * @return the command instance
-     */
-    public static BreadboxCommand getCommand(String command) {
-        return instance.commands.get(command);
     }
 
     /**
@@ -56,12 +48,22 @@ public class BreadboxApplication {
     }
 
     /**
+     * Get a command from the {@link BreadboxApplication#commands} hashmap.
+     *
+     * @param command the command name
+     * @return the command instance
+     */
+    public BreadboxCommand getCommand(String command) {
+        return commands.get(command);
+    }
+
+    /**
      * Get all the commands.
      *
      * @return all the commands
      */
-    public static Map<String, BreadboxCommand> getCommands() {
-        return instance.commands;
+    public Map<String, BreadboxCommand> getCommands() {
+        return commands;
     }
 
     String getToken() {
@@ -75,7 +77,7 @@ public class BreadboxApplication {
      */
     private void setup(String token) {
         environment = Environment.find(System.getenv("BREADBOX_ENV"));
-        IDiscordClient client = BreadboxAuthentication.createClient(token);
+        client = BreadboxAuthentication.createClient(token);
         if (client != null) {
             EventDispatcher dispatcher = client.getDispatcher();
             dispatcher.registerListener(new ReadyEventHandler());
@@ -84,7 +86,11 @@ public class BreadboxApplication {
     }
 
     public void registerCommand(String command, BreadboxCommand clazz) {
-        instance.commands.put(command, clazz);
+        commands.put(command, clazz);
+    }
+
+    public IDiscordClient getClient() {
+        return client;
     }
 
     public Environment getEnvironment() {

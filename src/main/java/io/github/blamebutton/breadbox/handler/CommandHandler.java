@@ -81,7 +81,7 @@ public class CommandHandler {
      * @param arguments the arguments for the command
      */
     private void callCommand(MessageEvent event, String command, List<String> arguments) {
-        BreadboxCommand cmd = BreadboxApplication.getCommand(command);
+        BreadboxCommand cmd = BreadboxApplication.instance.getCommand(command);
         if (cmd == null) {
             RequestBuffer.request(() -> {
                 String message = String.format("Command `%s` does not exist.", command);
