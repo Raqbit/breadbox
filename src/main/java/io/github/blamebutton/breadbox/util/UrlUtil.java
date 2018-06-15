@@ -21,7 +21,7 @@ public class UrlUtil {
         try {
             return URLEncoder.encode(url, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            logger.error("Formatting was not recognized", e);
+            logger.error("Character set was not recognized", e);
             return null;
         }
     }
