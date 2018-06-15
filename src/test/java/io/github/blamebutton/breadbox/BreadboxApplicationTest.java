@@ -15,8 +15,28 @@ class BreadboxApplicationTest {
     }
 
     @Test
-    void testToken() {
+    void main() {
         BreadboxApplication app = new BreadboxApplication(token);
-        assertEquals(app.getToken(), "token", "Token did not equal.");
+        assertEquals(app.getToken(), token, "Token did not equal.");
+    }
+
+    @Test
+    void getCommand() {
+    }
+
+    @Test
+    void getCommands() {
+    }
+
+    @Test
+    void getToken() {
+    }
+
+    @Test
+    void registerCommand() {
+    }
+
+    @Test
+    void getEnvironment() {
     }
 }

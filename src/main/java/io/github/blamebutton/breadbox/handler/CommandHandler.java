@@ -54,7 +54,7 @@ public class CommandHandler {
             return;
         }
         String displayName = event.getAuthor().getName();
-        logger.debug("User: {}, message: {}: {}", displayName, event.getMessageID(), event.getMessage());
+        logger.debug("User: {}, message: {}: {}", displayName, event.getMessageID(), event.getMessage().getContent());
     }
 
     /**
