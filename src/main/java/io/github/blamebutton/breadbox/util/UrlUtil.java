@@ -34,7 +34,7 @@ public class UrlUtil {
      * @param charset the charset to use for encoding
      * @return the encoded string
      */
-    private static String encode(String url, String charset) {
+    public static String encode(String url, String charset) {
         try {
             return URLEncoder.encode(url, charset);
         } catch (UnsupportedEncodingException e) {
