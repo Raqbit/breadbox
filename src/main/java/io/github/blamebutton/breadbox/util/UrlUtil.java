@@ -38,6 +38,7 @@ public class UrlUtil {
         try {
             return URLEncoder.encode(url, charset);
         } catch (UnsupportedEncodingException e) {
+            logger.error("Unsupported encoding charset found", e);
             return null;
         }
     }
