@@ -11,7 +11,7 @@
     </appender>
 
     <logger name="io.github.blamebutton.breadbox" level="DEBUG"/>
-    <logger name="sx.blah.discord" level="OFF"/>
+    <logger name="sx.blah.discord" level="INFO"/>
 
     <root level="WARN">
         <appender-ref ref="STDOUT"/>

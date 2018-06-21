@@ -22,8 +22,7 @@ public class CommandHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
 
-    private static final String commandPrefix = ".b";
-    private static final String testChannel = "breadbot-test-spam";
+    private static final String COMMAND_PREFIX = ".b";
 
     /**
      * Handle the receiving of a message.
@@ -43,12 +42,9 @@ public class CommandHandler {
     }
 
     private void messageReceived(MessageEvent event) {
-        if (!event.getChannel().isPrivate() && !testChannel.equals(event.getChannel().getName())) {
-            return;
-        }
         String content = event.getMessage().getContent();
         String[] args = content.split(" ");
-        boolean isCommand = commandPrefix.equals(args[0]);
+        boolean isCommand = COMMAND_PREFIX.equals(args[0]);
         if (isCommand) {
             handleCommand(event, args);
             return;

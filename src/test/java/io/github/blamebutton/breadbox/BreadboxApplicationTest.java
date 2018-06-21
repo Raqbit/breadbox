@@ -3,10 +3,7 @@ package io.github.blamebutton.breadbox;
 import io.github.blamebutton.breadbox.command.ICommand;
 import io.github.blamebutton.breadbox.util.Environment;
 import org.apache.commons.lang3.NotImplementedException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sx.blah.discord.handle.obj.IMessage;
 
 import java.util.List;
@@ -14,20 +11,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BreadboxApplicationTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(BreadboxApplicationTest.class);
-
-    private String token;
-    private BreadboxApplication app;
-
-    @BeforeEach
-    void setUp() {
-        token = System.getenv("BREADBOX_TOKEN");
-        if (app == null) {
-            app = new BreadboxApplication(token);
-        }
-    }
+class BreadboxApplicationTest extends BaseTest {
 
     @Test
     void main() {
@@ -62,7 +46,7 @@ class BreadboxApplicationTest {
     void getCommands() {
         String commandName = "get-commands-test";
 
-        app.registerCommand(commandName, null);
+        app.registerCommand(commandName, (ICommand) null);
         Map<String, ICommand> commands = app.getCommands();
         boolean contains = commands.containsKey(commandName);
         assertTrue(contains);
