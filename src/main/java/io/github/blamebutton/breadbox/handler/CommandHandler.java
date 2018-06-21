@@ -1,7 +1,7 @@
 package io.github.blamebutton.breadbox.handler;
 
 import io.github.blamebutton.breadbox.BreadboxApplication;
-import io.github.blamebutton.breadbox.command.BreadboxCommand;
+import io.github.blamebutton.breadbox.command.ICommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -22,8 +22,7 @@ public class CommandHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
 
-    private static final String commandPrefix = ".b";
-    private static final String testChannel = "breadbot-test-spam";
+    private static final List<String> COMMAND_PREFIXES = Arrays.asList("?", Character.toString('\u00bf'));
 
     /**
      * Handle the receiving of a message.
@@ -43,12 +42,9 @@ public class CommandHandler {
     }
 
     private void messageReceived(MessageEvent event) {
-        if (!event.getChannel().isPrivate() && !testChannel.equals(event.getChannel().getName())) {
-            return;
-        }
         String content = event.getMessage().getContent();
         String[] args = content.split(" ");
-        boolean isCommand = commandPrefix.equals(args[0]);
+        boolean isCommand = COMMAND_PREFIXES.contains(args[0]);
         if (isCommand) {
             handleCommand(event, args);
             return;
@@ -81,7 +77,7 @@ public class CommandHandler {
      * @param arguments the arguments for the command
      */
     private void callCommand(MessageEvent event, String command, List<String> arguments) {
-        BreadboxCommand cmd = BreadboxApplication.instance.getCommand(command);
+        ICommand cmd = BreadboxApplication.instance.getCommand(command);
         if (cmd == null) {
             RequestBuffer.request(() -> {
                 String message = String.format("Command `%s` does not exist.", command);
