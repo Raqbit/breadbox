@@ -1,5 +1,5 @@
 .idea/*
-!.idea/runConfigurations/*
+!.idea/runConfigurations
 !.idea/compiler.xml
 !.idea/vcs.xml
 target/*
