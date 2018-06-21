@@ -22,7 +22,7 @@ public class CommandHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
 
-    private static final String COMMAND_PREFIX = ".b";
+    private static final List<String> COMMAND_PREFIXES = Arrays.asList("?", Character.toString('\u00bf'));
 
     /**
      * Handle the receiving of a message.
@@ -44,7 +44,7 @@ public class CommandHandler {
     private void messageReceived(MessageEvent event) {
         String content = event.getMessage().getContent();
         String[] args = content.split(" ");
-        boolean isCommand = COMMAND_PREFIX.equals(args[0]);
+        boolean isCommand = COMMAND_PREFIXES.contains(args[0]);
         if (isCommand) {
             handleCommand(event, args);
             return;
