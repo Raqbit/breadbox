@@ -1,7 +1,7 @@
 package io.github.blamebutton.breadbox.handler;
 
 import io.github.blamebutton.breadbox.BreadboxApplication;
-import io.github.blamebutton.breadbox.command.BreadboxCommand;
+import io.github.blamebutton.breadbox.command.ICommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -81,7 +81,7 @@ public class CommandHandler {
      * @param arguments the arguments for the command
      */
     private void callCommand(MessageEvent event, String command, List<String> arguments) {
-        BreadboxCommand cmd = BreadboxApplication.instance.getCommand(command);
+        ICommand cmd = BreadboxApplication.instance.getCommand(command);
         if (cmd == null) {
             RequestBuffer.request(() -> {
                 String message = String.format("Command `%s` does not exist.", command);

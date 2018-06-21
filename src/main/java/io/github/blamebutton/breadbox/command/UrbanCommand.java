@@ -14,7 +14,7 @@ import sx.blah.discord.util.RequestBuffer;
 import java.awt.*;
 import java.util.List;
 
-public class UrbanCommand implements BreadboxCommand {
+public class UrbanCommand implements ICommand {
 
     private static final Logger logger = LoggerFactory.getLogger(UrbanCommand.class);
     private static final String URBAN_SEARCH_URL = "https://api.urbandictionary.com/v0/define?term=%s";

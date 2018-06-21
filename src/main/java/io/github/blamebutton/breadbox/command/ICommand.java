@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Interface for any command.
  */
-public interface BreadboxCommand {
+public interface ICommand {
 
     /**
      * Handle the execution of a command.

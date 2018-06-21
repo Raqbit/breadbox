@@ -1,6 +1,6 @@
 package io.github.blamebutton.breadbox;
 
-import io.github.blamebutton.breadbox.command.BreadboxCommand;
+import io.github.blamebutton.breadbox.command.ICommand;
 import io.github.blamebutton.breadbox.handler.CommandHandler;
 import io.github.blamebutton.breadbox.handler.ReadyEventHandler;
 import io.github.blamebutton.breadbox.util.Environment;
@@ -15,7 +15,7 @@ public class BreadboxApplication {
     public static BreadboxApplication instance;
 
     private final String token;
-    private final Map<String, BreadboxCommand> commands = new HashMap<>();
+    private final Map<String, ICommand> commands = new HashMap<>();
     private Environment environment;
     private IDiscordClient client;
 
@@ -52,7 +52,7 @@ public class BreadboxApplication {
      * @param command the command name
      * @return the command instance
      */
-    public BreadboxCommand getCommand(String command) {
+    public ICommand getCommand(String command) {
         return commands.get(command);
     }
 
@@ -61,7 +61,7 @@ public class BreadboxApplication {
      *
      * @return all the commands
      */
-    public Map<String, BreadboxCommand> getCommands() {
+    public Map<String, ICommand> getCommands() {
         return commands;
     }
 
@@ -84,7 +84,7 @@ public class BreadboxApplication {
         }
     }
 
-    public void registerCommand(String command, BreadboxCommand klass) {
+    public void registerCommand(String command, ICommand klass) {
         commands.put(command, klass);
     }
 

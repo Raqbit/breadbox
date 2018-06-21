@@ -1,6 +1,6 @@
 package io.github.blamebutton.breadbox;
 
-import io.github.blamebutton.breadbox.command.BreadboxCommand;
+import io.github.blamebutton.breadbox.command.ICommand;
 import io.github.blamebutton.breadbox.util.Environment;
 import org.apache.commons.lang3.NotImplementedException;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ class BreadboxApplicationTest {
     void getCommand() {
         String commandName = "get-command-test";
 
-        app.registerCommand(commandName, new BreadboxCommand() {
+        app.registerCommand(commandName, new ICommand() {
             @Override
             public void handle(IMessage message, List<String> args) {
             }
@@ -53,7 +53,7 @@ class BreadboxApplicationTest {
                 return null;
             }
         });
-        BreadboxCommand command = app.getCommand(commandName);
+        ICommand command = app.getCommand(commandName);
         assertNotNull(command);
         assertEquals(command.getUsage(), "usage");
     }
@@ -63,7 +63,7 @@ class BreadboxApplicationTest {
         String commandName = "get-commands-test";
 
         app.registerCommand(commandName, null);
-        Map<String, BreadboxCommand> commands = app.getCommands();
+        Map<String, ICommand> commands = app.getCommands();
         boolean contains = commands.containsKey(commandName);
         assertTrue(contains);
     }
@@ -75,7 +75,7 @@ class BreadboxApplicationTest {
     @Test
     void registerCommand() {
         String commandName = "register-command-test";
-        app.registerCommand(commandName, new BreadboxCommand() {
+        app.registerCommand(commandName, new ICommand() {
             @Override
             public void handle(IMessage message, List<String> args) {
                 throw new NotImplementedException("Not implemented.");
@@ -92,10 +92,10 @@ class BreadboxApplicationTest {
             }
         });
 
-        Map<String, BreadboxCommand> commands = app.getCommands();
+        Map<String, ICommand> commands = app.getCommands();
 
         boolean contains = commands.containsKey(commandName);
-        BreadboxCommand command = commands.get(commandName);
+        ICommand command = commands.get(commandName);
         assertTrue(contains);
         assertEquals(command.getUsage(), "test-command <arg> [arg]");
         assertEquals(command.getDescription(), "Command for testing purposes.");
