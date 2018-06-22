@@ -29,14 +29,14 @@ public class CommandHandler {
      *
      * @param event the message received event
      */
-    @EventSubscriber
     @SuppressWarnings("unused")
+    @EventSubscriber
     public void handle(MessageReceivedEvent event) {
         messageReceived(event);
     }
 
-    @EventSubscriber
     @SuppressWarnings("unused")
+    @EventSubscriber
     public void handle(MessageEditEvent event) {
         messageReceived(event);
     }
