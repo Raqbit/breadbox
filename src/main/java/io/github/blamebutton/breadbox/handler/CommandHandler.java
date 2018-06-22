@@ -13,7 +13,6 @@ import sx.blah.discord.util.RequestBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * Handles everything related to messages being received.
@@ -44,13 +43,14 @@ public class CommandHandler {
     private void messageReceived(MessageEvent event) {
         String content = event.getMessage().getContent();
         String[] args = content.split(" ");
-        boolean isCommand = COMMAND_PREFIXES.contains(args[0]);
+        String firstArgument = args[0];
+        boolean isCommand = COMMAND_PREFIXES.contains(firstArgument.substring(0, 1));
         if (isCommand) {
             handleCommand(event, args);
             return;
         }
         String displayName = event.getAuthor().getName();
-        logger.debug("User: {}, message: {}: {}", displayName, event.getMessageID(), event.getMessage().getContent());
+        logger.debug("User: {}, message: {}: {}", displayName, event.getMessageID(), content);
     }
 
     /**
@@ -61,11 +61,11 @@ public class CommandHandler {
      */
     private void handleCommand(MessageEvent event, String[] args) {
         List<String> arguments = new ArrayList<>(Arrays.asList(args));
-        if (arguments.size() < 2) {
+        if (arguments.size() < 1) {
             return;
         }
-        String command = arguments.get(1);
-        IntStream.of(0, 0).forEach(arguments::remove);
+        String command = arguments.get(0).substring(1);
+        arguments.remove(0);
         callCommand(event, command, arguments);
     }
 
