@@ -30,7 +30,7 @@ public class ReadyEventHandler implements IListener<ReadyEvent> {
             logger.debug("Name already matches.");
         }
         RequestBuffer.request(() ->
-                client.changePresence(StatusType.ONLINE, ActivityType.WATCHING, "your nudes."));
+                client.changePresence(StatusType.ONLINE, ActivityType.WATCHING, "your nudes. (?help)"));
         registerCommands();
     }
 
