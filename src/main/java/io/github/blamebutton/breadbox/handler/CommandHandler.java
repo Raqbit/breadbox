@@ -98,10 +98,14 @@ public class CommandHandler {
             String[] args = arguments.toArray(new String[]{});
             CommandLine commandLine = parser.parse(options, args);
             cmd.handle(event.getMessage(), commandLine);
+        } catch (MissingArgumentException e) {
+            String message = I18n.get("command.error.missing_argument", command, e.getOption().getOpt());
+            channel.sendMessage(message);
         } catch (ParseException e) {
             String message = I18n.get("command.error.not_parsed", command);
             String incidentId = IncidentUtils.report(message, logger, e);
             channel.sendMessage(I18n.get("command.error.internal_error", incidentId, command));
         }
+
     }
 }

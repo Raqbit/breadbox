@@ -7,6 +7,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IPrivateChannel;
 import sx.blah.discord.handle.obj.IUser;
@@ -24,6 +25,11 @@ public class HelpCommand implements ICommand {
 
     @Override
     public void handle(IMessage message, CommandLine commandLine) {
+        IChannel channel = message.getChannel();
+        if (commandLine.hasOption('h')) {
+            channel.sendMessage("help dialog: " + getOptions().toString());
+            return;
+        }
         List<String> args = commandLine.getArgList();
         RequestBuffer.request(() -> {
             EmbedBuilder builder = buildEmbedObject(args);
@@ -32,8 +38,8 @@ public class HelpCommand implements ICommand {
                 IPrivateChannel pm = message.getClient().getOrCreatePMChannel(author);
                 pm.sendMessage(builder.build());
             } else {
-                message.getChannel().sendMessage(builder.build());
-                if (!message.getChannel().isPrivate()) {
+                channel.sendMessage(builder.build());
+                if (!channel.isPrivate()) {
                     message.delete();
                 }
             }
@@ -47,12 +53,12 @@ public class HelpCommand implements ICommand {
             String command = args.get(0);
             ICommand cmd = BreadboxApplication.instance.getCommand(command);
             builder = new EmbedBuilder()
-                    .withTitle(String.format("Help dialog for `%s`", command));
-            builder.appendField(String.format("Usage: `%s %s`", command, cmd.getUsage()), cmd.getDescription(), true);
+                    .withTitle(I18n.get("command.help.single.embed.title", command));
+            builder.appendField(I18n.get("command.help.single.usage_field", command, cmd.getUsage()), cmd.getDescription(), true);
         } else {
             builder = new EmbedBuilder()
                     .withTitle(I18n.get("command.help.embed.title"))
-                    .withDescription("All commands and their descriptions are listed here.");
+                    .withDescription(I18n.get("command.help.embed.description"));
             BreadboxApplication.instance.getCommands().forEach((command, instance) -> {
                 String usage = String.format("%s %s", command, instance.getUsage());
                 builder.appendField(String.format("%s: %s", command, usage), instance.getDescription(), false);
@@ -73,8 +79,6 @@ public class HelpCommand implements ICommand {
 
     @Override
     public Options getOptions() {
-        Options options = new Options();
-        options.addOption("command", "Command to get help for.");
-        return options;
+        return new Options();
     }
 }

@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.handle.obj.IMessage;
 
+import java.util.Arrays;
+
 /**
  * Command for creating strawpolls.
  *
@@ -21,6 +23,8 @@ public class StrawpollCommand implements ICommand {
     @Override
     public void handle(IMessage message, CommandLine commandLine) {
         message.getChannel().sendMessage("got it");
+        logger.debug(Arrays.toString(commandLine.getArgList().toArray()));
+        logger.debug(getOptions().toString());
     }
 
     @Override
@@ -35,6 +39,8 @@ public class StrawpollCommand implements ICommand {
 
     @Override
     public Options getOptions() {
-        return null;
+        Options options = new Options();
+        options.addOption("o", true, "Help");
+        return options;
     }
 }
