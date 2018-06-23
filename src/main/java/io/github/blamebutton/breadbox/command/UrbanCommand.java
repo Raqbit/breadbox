@@ -22,7 +22,6 @@ import java.util.List;
 public class UrbanCommand implements ICommand {
 
     private static final Logger logger = LoggerFactory.getLogger(UrbanCommand.class);
-    private static final String URBAN_SEARCH_URL = I18n.get("url.urban_search");
     private static final String THUMBNAIL = I18n.get("url.urban_icon");
 
     @Override
@@ -67,7 +66,7 @@ public class UrbanCommand implements ICommand {
      * @return the json array with all terms that were found, returns null when there was an exception
      */
     private JSONArray getTermList(String term) {
-        String url = String.format(URBAN_SEARCH_URL, UrlUtil.encode(term));
+        String url = I18n.get("url.urban_search", UrlUtil.encode(term));
         try {
             return Unirest.get(url)
                     .asJson()
@@ -92,6 +91,6 @@ public class UrbanCommand implements ICommand {
 
     @Override
     public Options getOptions() {
-        return null;
+        return new Options();
     }
 }

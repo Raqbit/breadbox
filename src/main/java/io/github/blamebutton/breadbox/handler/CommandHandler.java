@@ -25,7 +25,7 @@ public class CommandHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
 
-    private static final List<String> COMMAND_PREFIXES = Arrays.asList("?", Character.toString('\u00bf'));
+    private static final List<Character> COMMAND_PREFIXES = Arrays.asList('?', '\u00bf');
 
     private final CommandLineParser parser = new DefaultParser();
 
@@ -49,8 +49,8 @@ public class CommandHandler {
     private void messageReceived(MessageEvent event) {
         String content = event.getMessage().getContent();
         String[] args = content.split(" ");
-        String firstArgument = args[0];
-        boolean isCommand = COMMAND_PREFIXES.contains(firstArgument.substring(0, 1));
+        char prefix = args[0].charAt(0);
+        boolean isCommand = args[0].length() > 1 && COMMAND_PREFIXES.contains(prefix);
         if (isCommand) {
             handleCommand(event, args);
             return;

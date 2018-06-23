@@ -45,9 +45,10 @@ public class HelpCommand implements ICommand {
         EmbedBuilder builder;
         if (args.size() > 0) {
             String command = args.get(0);
+            ICommand cmd = BreadboxApplication.instance.getCommand(command);
             builder = new EmbedBuilder()
-                    .withTitle(String.format("Help: `%s`", command));
-            builder.appendField(command, BreadboxApplication.instance.getCommand(command).getDescription(), true);
+                    .withTitle(String.format("Help dialog for `%s`", command));
+            builder.appendField(String.format("Usage: `%s %s`", command, cmd.getUsage()), cmd.getDescription(), true);
         } else {
             builder = new EmbedBuilder()
                     .withTitle(I18n.get("command.help.embed.title"))

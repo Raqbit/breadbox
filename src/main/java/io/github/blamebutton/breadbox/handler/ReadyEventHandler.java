@@ -16,7 +16,7 @@ import sx.blah.discord.util.RequestBuffer;
 public class ReadyEventHandler implements IListener<ReadyEvent> {
 
     private static Logger logger = LoggerFactory.getLogger(ReadyEventHandler.class);
-    private final String name = "BreadBox";
+    private static final String name = "BreadBox";
 
     @Override
     public void handle(ReadyEvent event) {
@@ -30,7 +30,7 @@ public class ReadyEventHandler implements IListener<ReadyEvent> {
             logger.debug("Name already matches.");
         }
         RequestBuffer.request(() ->
-                client.changePresence(StatusType.ONLINE, ActivityType.WATCHING, "your nudes. (?help)"));
+                client.changePresence(StatusType.ONLINE, ActivityType.WATCHING, "your nudes (?help)"));
         registerCommands();
     }
 
