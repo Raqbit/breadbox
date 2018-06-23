@@ -2,6 +2,9 @@ package io.github.blamebutton.breadbox.command;
 
 import io.github.blamebutton.breadbox.BreadboxApplication;
 import io.github.blamebutton.breadbox.util.Environment;
+import io.github.blamebutton.breadbox.util.I18n;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.handle.obj.IMessage;
@@ -20,7 +23,8 @@ public class HelpCommand implements ICommand {
     private static Logger logger = LoggerFactory.getLogger(HelpCommand.class);
 
     @Override
-    public void handle(IMessage message, List<String> args) {
+    public void handle(IMessage message, CommandLine commandLine) {
+        List<String> args = commandLine.getArgList();
         RequestBuffer.request(() -> {
             EmbedBuilder builder = buildEmbedObject(args);
             if (Environment.PRODUCTION.equals(instance.getEnvironment())) {
@@ -46,7 +50,7 @@ public class HelpCommand implements ICommand {
             builder.appendField(command, BreadboxApplication.instance.getCommand(command).getDescription(), true);
         } else {
             builder = new EmbedBuilder()
-                    .withTitle("Help Dialog")
+                    .withTitle(I18n.get("command.help.embed.title"))
                     .withDescription("All commands and their descriptions are listed here.");
             BreadboxApplication.instance.getCommands().forEach((command, instance) -> {
                 String usage = String.format("%s %s", command, instance.getUsage());
@@ -58,11 +62,18 @@ public class HelpCommand implements ICommand {
 
     @Override
     public String getUsage() {
-        return "[command]";
+        return I18n.get("command.help.usage");
     }
 
     @Override
     public String getDescription() {
-        return "Shows an overview of all commands.";
+        return I18n.get("command.help.description");
+    }
+
+    @Override
+    public Options getOptions() {
+        Options options = new Options();
+        options.addOption("command", "Command to get help for.");
+        return options;
     }
 }

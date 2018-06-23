@@ -2,12 +2,16 @@ package io.github.blamebutton.breadbox.handler;
 
 import io.github.blamebutton.breadbox.BreadboxApplication;
 import io.github.blamebutton.breadbox.command.ICommand;
+import io.github.blamebutton.breadbox.util.I18n;
+import io.github.blamebutton.breadbox.util.IncidentUtils;
+import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEditEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.RequestBuffer;
 
 import java.util.ArrayList;
@@ -22,6 +26,8 @@ public class CommandHandler {
     private static final Logger logger = LoggerFactory.getLogger(CommandHandler.class);
 
     private static final List<String> COMMAND_PREFIXES = Arrays.asList("?", Character.toString('\u00bf'));
+
+    private final CommandLineParser parser = new DefaultParser();
 
     /**
      * Handle the receiving of a message.
@@ -78,14 +84,24 @@ public class CommandHandler {
      */
     private void callCommand(MessageEvent event, String command, List<String> arguments) {
         ICommand cmd = BreadboxApplication.instance.getCommand(command);
+        IChannel channel = event.getChannel();
         if (cmd == null) {
             RequestBuffer.request(() -> {
-                String message = String.format("Command `%s` does not exist.", command);
-                event.getChannel().sendMessage(message);
+                String message = I18n.get("command.not_exist", command);
+                channel.sendMessage(message);
             });
             return;
         }
         logger.debug("Command '{}' arguments: {}", command, Arrays.toString(arguments.toArray()));
-        cmd.handle(event.getMessage(), arguments);
+        try {
+            Options options = cmd.getOptions();
+            String[] args = arguments.toArray(new String[]{});
+            CommandLine commandLine = parser.parse(options, args);
+            cmd.handle(event.getMessage(), commandLine);
+        } catch (ParseException e) {
+            String message = String.format(I18n.get("command.error.not_parsed"), command);
+            String incidentId = IncidentUtils.report(message, logger, e);
+            channel.sendMessage(I18n.get("command.error.internal_error", incidentId, command));
+        }
     }
 }

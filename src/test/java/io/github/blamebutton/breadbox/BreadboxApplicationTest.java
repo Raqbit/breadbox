@@ -2,11 +2,12 @@ package io.github.blamebutton.breadbox;
 
 import io.github.blamebutton.breadbox.command.ICommand;
 import io.github.blamebutton.breadbox.util.Environment;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Options;
 import org.apache.commons.lang3.NotImplementedException;
 import org.junit.jupiter.api.Test;
 import sx.blah.discord.handle.obj.IMessage;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +25,7 @@ class BreadboxApplicationTest extends BaseTest {
 
         app.registerCommand(commandName, new ICommand() {
             @Override
-            public void handle(IMessage message, List<String> args) {
+            public void handle(IMessage message, CommandLine commandLine) {
             }
 
             @Override
@@ -34,6 +35,11 @@ class BreadboxApplicationTest extends BaseTest {
 
             @Override
             public String getDescription() {
+                return null;
+            }
+
+            @Override
+            public Options getOptions() {
                 return null;
             }
         });
@@ -61,7 +67,7 @@ class BreadboxApplicationTest extends BaseTest {
         String commandName = "register-command-test";
         app.registerCommand(commandName, new ICommand() {
             @Override
-            public void handle(IMessage message, List<String> args) {
+            public void handle(IMessage message, CommandLine commandLine) {
                 throw new NotImplementedException("Not implemented.");
             }
 
@@ -73,6 +79,11 @@ class BreadboxApplicationTest extends BaseTest {
             @Override
             public String getDescription() {
                 return "Command for testing purposes.";
+            }
+
+            @Override
+            public Options getOptions() {
+                return null;
             }
         });
 
