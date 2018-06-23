@@ -15,7 +15,7 @@ public final class IncidentUtils {
     }
 
     public static String report(String message, Logger logger, Throwable exception) {
-        String incidentId = UUID.randomUUID().toString();
+        String incidentId = UUID.randomUUID().toString().toUpperCase();
         logger.error(String.format("Incident: '%s' - %s, '%s'", incidentId, message, exception.getMessage()), exception);
         return incidentId;
     }

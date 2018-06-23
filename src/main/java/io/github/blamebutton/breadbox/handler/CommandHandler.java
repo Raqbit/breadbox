@@ -99,7 +99,7 @@ public class CommandHandler {
             CommandLine commandLine = parser.parse(options, args);
             cmd.handle(event.getMessage(), commandLine);
         } catch (ParseException e) {
-            String message = String.format(I18n.get("command.error.not_parsed"), command);
+            String message = I18n.get("command.error.not_parsed", command);
             String incidentId = IncidentUtils.report(message, logger, e);
             channel.sendMessage(I18n.get("command.error.internal_error", incidentId, command));
         }
